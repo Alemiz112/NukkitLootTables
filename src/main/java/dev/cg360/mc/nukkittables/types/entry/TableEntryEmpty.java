@@ -1,17 +1,13 @@
 package dev.cg360.mc.nukkittables.types.entry;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 import dev.cg360.mc.nukkittables.types.TableFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 public final class TableEntryEmpty extends TableEntry {
 
@@ -21,7 +17,7 @@ public final class TableEntryEmpty extends TableEntry {
     }
 
     @Override
-    public ArrayList<Item> gatherEntryItems(TableRollContext context) {
+    public ArrayList<Item> gatherEntryItems(RollContext context) {
         return new ArrayList<>();
     }
 

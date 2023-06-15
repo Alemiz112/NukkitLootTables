@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.cg360.mc.nukkittables.Utility;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 import dev.cg360.mc.nukkittables.types.TableFunction;
 
@@ -23,7 +23,7 @@ public class TableEntryAlternatives extends TableEntry implements ParentTableEnt
     }
 
     @Override
-    public ArrayList<Item> gatherEntryItems(TableRollContext context) {
+    public ArrayList<Item> gatherEntryItems(RollContext context) {
         for(TableEntry entry: children){
             // Overriding the default roll handling
             // Conditions and functions being within the generic code were a mistake.

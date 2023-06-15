@@ -6,14 +6,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.cg360.mc.nukkittables.Utility;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
-import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 import dev.cg360.mc.nukkittables.types.TableFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 public abstract class TableEntry {
 
@@ -37,7 +35,7 @@ public abstract class TableEntry {
         this.quality = quality;
     }
 
-    public final ArrayList<Item> rollEntry(TableRollContext context){
+    public final ArrayList<Item> rollEntry(RollContext context){
         if(Utility.compileConditions(conditions, context)){
             ArrayList<Item> items = gatherEntryItems(context);
             ArrayList<Item> newItems = new ArrayList<>();
@@ -49,7 +47,7 @@ public abstract class TableEntry {
         return new ArrayList<>();
     }
 
-    public abstract ArrayList<Item> gatherEntryItems(TableRollContext context);
+    public abstract ArrayList<Item> gatherEntryItems(RollContext context);
 
     public final boolean loadPropertiesFromJson(JsonObject entryObject){
         JsonElement elementType = entryObject.get("type");

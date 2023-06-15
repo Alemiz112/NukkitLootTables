@@ -1,16 +1,12 @@
 package dev.cg360.mc.nukkittables;
 
-import cn.nukkit.Nukkit;
 import cn.nukkit.Server;
-import cn.nukkit.plugin.PluginLogger;
-import com.google.gson.*;
 import dev.cg360.mc.nukkittables.conditions.*;
+import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
 import dev.cg360.mc.nukkittables.functions.FunctionExecutorSetCount;
 import dev.cg360.mc.nukkittables.functions.FunctionExecutorSetMeta;
 import dev.cg360.mc.nukkittables.types.LootTable;
 import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
-import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
-import dev.cg360.mc.nukkittables.types.TablePool;
 import dev.cg360.mc.nukkittables.types.entry.*;
 
 import java.io.BufferedReader;
@@ -28,7 +24,7 @@ public class LootTableRegistry {
 
     public static final Class<? extends TableEntry> FALLBACK_ENTRY = TableEntryEmpty.class;
 
-    protected HashMap<String, TableConditionExecutor> conditionExecutors;
+    protected HashMap<String, TableConditionExecutor<?>> conditionExecutors;
     protected HashMap<String, TableFunctionExecutor> functionExecutors;
     protected HashMap<String, Class<? extends TableEntry>> entryTypes;
 
@@ -120,7 +116,7 @@ public class LootTableRegistry {
         return false;
     }
 
-    public void registerConditionExecutor(TableConditionExecutor condition){
+    public void registerConditionExecutor(TableConditionExecutor<?> condition){
         String originalID = condition.getConditionType().toLowerCase();
         conditionExecutors.put(originalID, condition);
         if(originalID.startsWith("minecraft:")){
@@ -147,7 +143,7 @@ public class LootTableRegistry {
         }
     }
 
-    public Optional<TableConditionExecutor> getConditionExecutor(String id){ return Optional.ofNullable(conditionExecutors.get(id.toLowerCase())); }
+    public Optional<TableConditionExecutor<?>> getConditionExecutor(String id){ return Optional.ofNullable(conditionExecutors.get(id.toLowerCase())); }
     public Optional<TableFunctionExecutor> getFunctionExecutor(String id){ return Optional.ofNullable(functionExecutors.get(id.toLowerCase())); }
     public Optional<Class<? extends TableEntry>> getEntryTypeClass(String id){ return Optional.ofNullable(entryTypes.get(id.toLowerCase())); }
     public Optional<LootTable> getLootTable(String id){ return Optional.ofNullable(lootTables.get(id.toLowerCase())); }

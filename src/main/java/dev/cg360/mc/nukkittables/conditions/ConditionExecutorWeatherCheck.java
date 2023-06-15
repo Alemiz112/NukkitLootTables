@@ -6,10 +6,10 @@ import com.google.gson.JsonPrimitive;
 import dev.cg360.mc.nukkittables.context.TableRollContext;
 import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
 
-public class ConditionExecutorWeatherCheck extends TableConditionExecutor {
+public class ConditionExecutorWeatherCheck extends TableConditionExecutor<TableRollContext> {
 
     @Override
-    public boolean isConditionPassed(TableRollContext context, JsonObject data) {
+    public boolean isConditionPassed0(TableRollContext context, JsonObject data) {
         JsonElement rainingElement = data.get("raining");
         if(rainingElement instanceof JsonPrimitive){
             JsonPrimitive rainingPrimitive = (JsonPrimitive) rainingElement;

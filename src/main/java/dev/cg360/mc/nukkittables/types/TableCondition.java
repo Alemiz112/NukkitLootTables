@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.cg360.mc.nukkittables.LootTableRegistry;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
 
 import java.util.Optional;
@@ -14,8 +14,8 @@ public final class TableCondition {
     protected String condition;
     protected JsonObject data;
 
-    public boolean isConditionPassed(TableRollContext context){
-        Optional<TableConditionExecutor> pc = LootTableRegistry.get().getConditionExecutor(condition);
+    public boolean isConditionPassed(RollContext context){
+        Optional<TableConditionExecutor<?>> pc = LootTableRegistry.get().getConditionExecutor(condition);
         if(pc.isPresent()){
             return pc.get().isConditionPassed(context, data);
         }

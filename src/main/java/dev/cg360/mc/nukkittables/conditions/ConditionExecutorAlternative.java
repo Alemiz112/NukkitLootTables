@@ -3,16 +3,16 @@ package dev.cg360.mc.nukkittables.conditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 
 import java.util.Optional;
 
-public class ConditionExecutorAlternative extends TableConditionExecutor {
+public class ConditionExecutorAlternative extends TableConditionExecutor<RollContext> {
 
     @Override
-    public boolean isConditionPassed(TableRollContext context, JsonObject data) {
+    public boolean isConditionPassed0(RollContext context, JsonObject data) {
         JsonElement termsElement = data.get("terms");
         if(termsElement instanceof JsonArray) {
             JsonArray termsArray = (JsonArray) termsElement;

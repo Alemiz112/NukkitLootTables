@@ -3,16 +3,13 @@ package dev.cg360.mc.nukkittables.types;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.MathHelper;
 import dev.cg360.mc.nukkittables.Utility;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
-import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
-import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.math.FloatRange;
 import dev.cg360.mc.nukkittables.math.IntegerRange;
 import dev.cg360.mc.nukkittables.types.entry.TableEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.Random;
 
 public final class TablePool {
@@ -66,7 +63,7 @@ public final class TablePool {
         this.entries = entries;
     }
 
-    protected ArrayList<Item> rollPoolOnce(TableRollContext context, int maxWeight, ArrayList<TableEntry> passedEntries){
+    protected ArrayList<Item> rollPoolOnce(RollContext context, int maxWeight, ArrayList<TableEntry> passedEntries){
         int selection = maxWeight > 0 ? new Random().nextInt(maxWeight) : 0;
         int cumulativeWeightChecked = 1;
         for(TableEntry entry: passedEntries){
@@ -79,7 +76,7 @@ public final class TablePool {
         return new ArrayList<>();
     }
 
-    public Item[] rollPool(TableRollContext context){
+    public Item[] rollPool(RollContext context){
         if(Utility.compileConditions(conditions, context)) {
             ArrayList<TableEntry> passedEntries = getPassedEntries(context);
             int maxWeight = 0;
@@ -102,7 +99,7 @@ public final class TablePool {
         return new Item[0];
     }
 
-    protected ArrayList<TableEntry> getPassedEntries(TableRollContext context){
+    protected ArrayList<TableEntry> getPassedEntries(RollContext context){
         ArrayList<TableEntry> passedEntries = new ArrayList<>();
         for(TableEntry entry : entries){
             if(Utility.compileConditions(entry.getConditions(), context)) passedEntries.add(entry);

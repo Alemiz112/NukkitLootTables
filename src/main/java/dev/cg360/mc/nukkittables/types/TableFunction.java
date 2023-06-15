@@ -6,9 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.cg360.mc.nukkittables.LootTableRegistry;
-import dev.cg360.mc.nukkittables.Utility;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
-import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
 
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ public class TableFunction {
     protected TableCondition[] conditions;
     protected JsonObject data;
 
-    public final Item applyFunction(Item item, TableRollContext context){ //TODO: And conditions
+    public final Item applyFunction(Item item, RollContext context){ //TODO: And conditions
         Optional<TableFunctionExecutor> pf = LootTableRegistry.get().getFunctionExecutor(function);
         if(pf.isPresent()){
             return pf.get().applyFunction(item, context, conditions, data);

@@ -10,10 +10,10 @@ import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
 
 import java.util.Optional;
 
-public class ConditionExecutorTimeCheck extends TableConditionExecutor {
+public class ConditionExecutorTimeCheck extends TableConditionExecutor<TableRollContext> {
 
     @Override
-    public boolean isConditionPassed(TableRollContext context, JsonObject data) {
+    public boolean isConditionPassed0(TableRollContext context, JsonObject data) {
         int time = context.getOrigin().getLevel().getTime();
 
         JsonElement elementPeriod = data.get("period");

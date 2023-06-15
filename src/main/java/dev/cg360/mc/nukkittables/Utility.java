@@ -7,9 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.cg360.mc.nukkittables.math.FloatRange;
 import dev.cg360.mc.nukkittables.math.IntegerRange;
-import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
-import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 import dev.cg360.mc.nukkittables.types.TableFunction;
 import dev.cg360.mc.nukkittables.types.entry.TableEntry;
@@ -19,7 +17,7 @@ import java.util.Random;
 
 public class Utility {
 
-    public static boolean compileConditions(TableCondition[] conditions, TableRollContext context){
+    public static boolean compileConditions(TableCondition[] conditions, RollContext context){
         if (conditions == null || conditions.length < 1) {
             return true;
         }
@@ -32,7 +30,7 @@ public class Utility {
         return true;
     }
 
-    public static Item applyFunctions(TableFunction[] functions, Item item, TableRollContext context){
+    public static Item applyFunctions(TableFunction[] functions, Item item, RollContext context){
         Item returnable = item;
         for(TableFunction func: functions) returnable = func.applyFunction(returnable, context);
         return returnable;

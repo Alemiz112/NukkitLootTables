@@ -1,11 +1,9 @@
 package dev.cg360.mc.nukkittables.types;
 
-import cn.nukkit.Server;
 import cn.nukkit.item.Item;
 import com.google.gson.*;
-import dev.cg360.mc.nukkittables.LootTableRegistry;
 import dev.cg360.mc.nukkittables.Utility;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.math.FloatRange;
 import dev.cg360.mc.nukkittables.math.IntegerRange;
 import dev.cg360.mc.nukkittables.types.entry.TableEntry;
@@ -24,7 +22,7 @@ public class LootTable {
         this.pools = pools;
     }
 
-    public Item[] rollLootTable(TableRollContext context){
+    public Item[] rollLootTable(RollContext context){
         ArrayList<Item> items = new ArrayList<>();
         for(TablePool pool: pools){
             if(Utility.compileConditions(pool.getConditions(), context)){

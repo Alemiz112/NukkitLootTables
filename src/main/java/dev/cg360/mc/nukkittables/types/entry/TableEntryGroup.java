@@ -1,19 +1,16 @@
 package dev.cg360.mc.nukkittables.types.entry;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import dev.cg360.mc.nukkittables.Utility;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 import dev.cg360.mc.nukkittables.types.TableFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 public class TableEntryGroup extends TableEntry implements ParentTableEntry {
 
@@ -26,7 +23,7 @@ public class TableEntryGroup extends TableEntry implements ParentTableEntry {
     }
 
     @Override
-    public ArrayList<Item> gatherEntryItems(TableRollContext context) {
+    public ArrayList<Item> gatherEntryItems(RollContext context) {
         ArrayList<Item> collectedItems = new ArrayList<>();
         for(TableEntry entry: children) collectedItems.addAll(entry.rollEntry(context));
         return collectedItems;

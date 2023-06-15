@@ -1,18 +1,13 @@
 package dev.cg360.mc.nukkittables.types.entry;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.RuntimeItemMapping;
 import cn.nukkit.item.RuntimeItems;
 import cn.nukkit.network.protocol.ProtocolInfo;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import dev.cg360.mc.nukkittables.Utility;
-import dev.cg360.mc.nukkittables.context.TableRollContext;
-import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
-import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 import dev.cg360.mc.nukkittables.types.TableFunction;
 
@@ -31,7 +26,7 @@ public class TableEntryItem extends TableEntry implements NamedTableEntry {
     }
 
     @Override
-    public ArrayList<Item> gatherEntryItems(TableRollContext context) {
+    public ArrayList<Item> gatherEntryItems(RollContext context) {
         if(name == null) return new ArrayList<>();
         ArrayList<Item> item = new ArrayList<>();
         getItem().ifPresent(item::add);

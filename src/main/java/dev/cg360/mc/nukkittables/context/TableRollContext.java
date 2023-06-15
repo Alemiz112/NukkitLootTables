@@ -2,7 +2,7 @@ package dev.cg360.mc.nukkittables.context;
 
 import cn.nukkit.level.Location;
 
-public class TableRollContext {
+public class TableRollContext implements RollContext {
 
     protected Location origin;
 
@@ -11,6 +11,7 @@ public class TableRollContext {
     }
 
     public Location getOrigin() {
-        return origin;
+        return this.origin;
     }
+
 }
