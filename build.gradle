@@ -1,31 +1,43 @@
-buildscript {
-    repositories {
-        gradlePluginPortal()
-    }
-
-    dependencies {
-        classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
-    }
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-apply plugin: 'java'
-apply plugin: 'com.github.johnrengelman.shadow'
-
-group 'dev.cg360.mc'
-version '1.0-SNAPSHOT'
+group "dev.cg360.mc"
+version "1.0-SNAPSHOT"
 
 repositories {
-    mavenCentral()
+    mavenLocal()
     maven {
-        url = 'https://repo.nukkitx.com/maven-snapshots'
+        url = "https://repo.mznt.eu/cubemc"
     }
-}
-
-dependencies {
-    shadow 'cn.nukkit:nukkit:1.0-SNAPSHOT'
+    mavenCentral()
 }
 
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+dependencies {
+    compileOnly 'cn.nukkit:Nukkit:alemiz-legacy'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url = 'https://repo.mizerak.eu/snapshots'
+            credentials {
+                username = "alemiz"
+                password = ""
+            }
+        }
+    }
 }
