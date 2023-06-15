@@ -20,6 +20,10 @@ import java.util.Random;
 public class Utility {
 
     public static boolean compileConditions(TableCondition[] conditions, TableRollContext context){
+        if (conditions == null || conditions.length < 1) {
+            return true;
+        }
+
         for(TableCondition condition: conditions){
             if(!condition.isConditionPassed(context)){
                 return false;

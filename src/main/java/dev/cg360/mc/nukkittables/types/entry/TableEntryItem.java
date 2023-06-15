@@ -2,6 +2,9 @@ package dev.cg360.mc.nukkittables.types.entry;
 
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.RuntimeItemMapping;
+import cn.nukkit.item.RuntimeItems;
+import cn.nukkit.network.protocol.ProtocolInfo;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,17 +39,19 @@ public class TableEntryItem extends TableEntry implements NamedTableEntry {
     }
 
     private Optional<Item> getItem(){
-        int id;
+        Item item;
         try {
-            id = Integer.parseInt(name);
+            RuntimeItemMapping mapping = RuntimeItems.getMapping(ProtocolInfo.CURRENT_PROTOCOL);
+            RuntimeItemMapping.LegacyEntry entry = mapping.fromIdentifier(this.name);
+            if (entry == null) {
+                item = Item.fromString(this.name);
+            } else {
+                item = Item.get(entry.getLegacyId(), entry.getDamage(), 1);
+            }
         } catch (Exception err){
             return Optional.empty();
         }
-
-        if(id < 256 && Block.list[id] != null) return Optional.of(Item.get(id));
-        if(id < 65535 && Item.list[id] != null) return Optional.of(Item.get(id));
-
-        return Optional.empty();
+       return Optional.of(item);
     }
 
     @Override
