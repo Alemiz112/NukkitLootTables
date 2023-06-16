@@ -9,15 +9,14 @@ import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
 
 import java.util.Optional;
 
-public final class TableCondition {
-
+public class TableCondition {
     protected String condition;
     protected JsonObject data;
 
     public boolean isConditionPassed(RollContext context){
-        Optional<TableConditionExecutor<?>> pc = LootTableRegistry.get().getConditionExecutor(condition);
-        if(pc.isPresent()){
-            return pc.get().isConditionPassed(context, data);
+        TableConditionExecutor<?> executor = LootTableRegistry.get().getConditionExecutor(condition);
+        if(executor != null){
+            return executor.isConditionPassed(context, data);
         }
         return true;
     }

@@ -60,10 +60,9 @@ public class Utility {
 
             if(typePrimitive.isString()){
                 String entryType = typePrimitive.getAsString();
-                Optional<Class<? extends TableEntry>> pc = LootTableRegistry.get().getEntryTypeClass(entryType.toLowerCase().trim());
+                Class<? extends TableEntry> entryClass = LootTableRegistry.get().getEntryTypeClass(entryType.toLowerCase().trim());
 
-                if(pc.isPresent()){
-                    Class<? extends TableEntry> entryClass = pc.get();
+                if(entryClass != null) {
                     try{
                         TableEntry e = entryClass.newInstance();
                         if(e.loadPropertiesFromJson(entryObject)) return Optional.of(e);

@@ -20,9 +20,9 @@ public class TableFunction {
     protected JsonObject data;
 
     public final Item applyFunction(Item item, RollContext context){ //TODO: And conditions
-        Optional<TableFunctionExecutor> pf = LootTableRegistry.get().getFunctionExecutor(function);
-        if(pf.isPresent()){
-            return pf.get().applyFunction(item, context, conditions, data);
+        TableFunctionExecutor executor = LootTableRegistry.get().getFunctionExecutor(function);
+        if(executor != null){
+            return executor.applyFunction(item, context, conditions, data);
         }
         return item;
     }

@@ -4,26 +4,29 @@ import cn.nukkit.Server;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dev.cg360.mc.nukkittables.conditions.*;
+import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
 import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
 import dev.cg360.mc.nukkittables.functions.FunctionExecutorSetCount;
 import dev.cg360.mc.nukkittables.functions.FunctionExecutorSetMeta;
 import dev.cg360.mc.nukkittables.types.LootTable;
-import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
 import dev.cg360.mc.nukkittables.types.entry.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 public class LootTableRegistry {
 
-    public static final LootTableRegistry INSTANCE = new LootTableRegistry();
-
+    private static final LootTableRegistry INSTANCE = new LootTableRegistry();
     public static final Class<? extends TableEntry> FALLBACK_ENTRY = TableEntryEmpty.class;
 
     protected HashMap<String, TableConditionExecutor<?>> conditionExecutors;
@@ -32,7 +35,7 @@ public class LootTableRegistry {
 
     protected HashMap<String, LootTable> lootTables;
 
-    private LootTableRegistry (){
+    private LootTableRegistry() {
         this.conditionExecutors = new HashMap<>();
         this.functionExecutors = new HashMap<>();
         this.entryTypes = new HashMap<>();
@@ -44,7 +47,7 @@ public class LootTableRegistry {
         this.registerDefaultFunctions();
     }
 
-    public void registerDefaultConditions(){
+    public void registerDefaultConditions() {
         // minecraft namespace
         this.registerConditionExecutor(new ConditionExecutorAlternative());
         this.registerConditionExecutor(new ConditionExecutorInverted());
@@ -56,7 +59,7 @@ public class LootTableRegistry {
         this.registerConditionExecutor(new ConditionExecutorPluginEnabled());
     }
 
-    public void registerDefaultFunctions(){
+    public void registerDefaultFunctions() {
         // minecraft namespace
         this.registerFunctionExecutor(new FunctionExecutorSetCount());
 
@@ -64,7 +67,7 @@ public class LootTableRegistry {
         this.registerFunctionExecutor(new FunctionExecutorSetMeta());
     }
 
-    public void registerDefaultTypes(){
+    public void registerDefaultTypes() {
         this.registerEntryType("minecraft:item", TableEntryItem.class);
         this.registerEntryType("minecraft:group", TableEntryGroup.class);
         this.registerEntryType("minecraft:alternatives", TableEntryAlternatives.class);
@@ -72,24 +75,24 @@ public class LootTableRegistry {
         this.registerEntryType("minecraft:empty", TableEntryEmpty.class);
     }
 
-    public void loadAllLootTablesFromStorage(String name, boolean includeSubfolders){
+    public void loadAllLootTablesFromStorage(String name, boolean includeSubfolders) {
         File root = new File(Server.getInstance().getDataPath() + "loottables/" + name);
-        if(root.exists() && root.isDirectory()){
+        if (root.exists() && root.isDirectory()) {
             try {
                 for (File file : root.listFiles()) {
-                    if(file.isDirectory() && includeSubfolders){
-                        loadAllLootTablesFromStorage(name+"/"+file.getName(), true);
+                    if (file.isDirectory() && includeSubfolders) {
+                        loadAllLootTablesFromStorage(name + "/" + file.getName(), true);
                     } else {
                         try {
-                            registerStoredLootTable(name+"/"+file.getName());
-                        } catch (Exception err){
-                            Server.getInstance().getLogger().error("Error loading loot table at: "+file.getAbsolutePath());
+                            registerStoredLootTable(name + "/" + file.getName());
+                        } catch (Exception err) {
+                            Server.getInstance().getLogger().error("Error loading loot table at: " + file.getAbsolutePath());
                             err.printStackTrace();
                         }
                     }
                 }
-            } catch (Exception err){
-                Server.getInstance().getLogger().error("Error loading loot tables in: "+root.getAbsolutePath());
+            } catch (Exception err) {
+                Server.getInstance().getLogger().error("Error loading loot tables in: " + root.getAbsolutePath());
                 err.printStackTrace();
             }
         }
@@ -118,52 +121,73 @@ public class LootTableRegistry {
 
     public boolean registerLootTableFromString(String name, JsonElement json) {
         Optional<LootTable> pt = LootTable.createLootTableFromString(json);
-        if(pt.isPresent()){
+        if (pt.isPresent()) {
             lootTables.put(name.toLowerCase().trim().substring((name.startsWith("/") ? 1 : 0)), pt.get());
             return true;
         }
         return false;
     }
 
-    public void registerConditionExecutor(TableConditionExecutor<?> condition){
+    public void registerConditionExecutor(TableConditionExecutor<?> condition) {
         String originalID = condition.getConditionType().toLowerCase();
         conditionExecutors.put(originalID, condition);
-        if(originalID.startsWith("minecraft:")){
+        if (originalID.startsWith("minecraft:")) {
             String shortenedID = originalID.substring(10);
             conditionExecutors.put(shortenedID, condition);
         }
     }
 
-    public void registerFunctionExecutor(TableFunctionExecutor function){
+    public void registerFunctionExecutor(TableFunctionExecutor function) {
         String originalID = function.getFunctionType().toLowerCase();
         functionExecutors.put(originalID, function);
-        if(originalID.startsWith("minecraft:")){
+        if (originalID.startsWith("minecraft:")) {
             String shortenedID = originalID.substring(10);
             functionExecutors.put(shortenedID, function);
         }
     }
 
-    public void registerEntryType(String id, Class<? extends TableEntry> entryType){
+    public void registerEntryType(String id, Class<? extends TableEntry> entryType) {
         String originalID = id.toLowerCase();
         entryTypes.put(originalID, entryType);
-        if(originalID.startsWith("minecraft:")){
+        if (originalID.startsWith("minecraft:")) {
             String shortenedID = originalID.substring(10);
             entryTypes.put(shortenedID, entryType);
         }
     }
 
-    public Optional<TableConditionExecutor<?>> getConditionExecutor(String id){ return Optional.ofNullable(conditionExecutors.get(id.toLowerCase())); }
-    public Optional<TableFunctionExecutor> getFunctionExecutor(String id){ return Optional.ofNullable(functionExecutors.get(id.toLowerCase())); }
-    public Optional<Class<? extends TableEntry>> getEntryTypeClass(String id){ return Optional.ofNullable(entryTypes.get(id.toLowerCase())); }
-    public Optional<LootTable> getLootTable(String id){ return Optional.ofNullable(lootTables.get(id.toLowerCase())); }
-
-    public ArrayList<String> getConditionExecutors() { return new ArrayList<>(conditionExecutors.keySet()); }
-    public ArrayList<String> getFunctionExecutors() { return new ArrayList<>(functionExecutors.keySet()); }
-    public ArrayList<String> getEntryTypes() { return new ArrayList<>(entryTypes.keySet()); }
-    public ArrayList<String> getLootTables() { return new ArrayList<>(lootTables.keySet()); }
-
-    public static LootTableRegistry get(){
-        return INSTANCE;
+    public TableConditionExecutor<?> getConditionExecutor(String id) {
+        return conditionExecutors.get(id.toLowerCase());
     }
 
+    public TableFunctionExecutor getFunctionExecutor(String id) {
+        return functionExecutors.get(id.toLowerCase());
+    }
+
+    public Class<? extends TableEntry> getEntryTypeClass(String id) {
+        return entryTypes.get(id.toLowerCase());
+    }
+
+    public LootTable getLootTable(String id) {
+        return lootTables.get(id.toLowerCase());
+    }
+
+    public List<String> getConditionExecutors() {
+        return new ArrayList<>(conditionExecutors.keySet());
+    }
+
+    public List<String> getFunctionExecutors() {
+        return new ArrayList<>(functionExecutors.keySet());
+    }
+
+    public List<String> getEntryTypes() {
+        return new ArrayList<>(entryTypes.keySet());
+    }
+
+    public List<String> getLootTables() {
+        return new ArrayList<>(lootTables.keySet());
+    }
+
+    public static LootTableRegistry get() {
+        return INSTANCE;
+    }
 }
