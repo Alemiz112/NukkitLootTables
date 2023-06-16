@@ -11,11 +11,16 @@ version "1.0-SNAPSHOT-AM"
 repositories {
     mavenLocal()
     maven {
+        name = "MizNet Repo"
         url = "https://repo.mznt.eu/cubemc"
         credentials {
             username = System.getenv("DEPLOY_USERNAME")
             password = System.getenv("DEPLOY_PASSWORD")
         }
+    }
+    maven {
+        name = "Cloudburst Repo"
+        url = "https://repo.opencollab.dev/main"
     }
     mavenCentral()
 }
