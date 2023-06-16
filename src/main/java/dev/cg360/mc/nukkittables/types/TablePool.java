@@ -8,11 +8,10 @@ import dev.cg360.mc.nukkittables.math.FloatRange;
 import dev.cg360.mc.nukkittables.math.IntegerRange;
 import dev.cg360.mc.nukkittables.types.entry.TableEntry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
-public final class TablePool {
+public class TablePool {
 
     protected TableCondition[] conditions;
     protected TableFunction[] functions;
@@ -63,8 +62,8 @@ public final class TablePool {
         this.entries = entries;
     }
 
-    protected ArrayList<Item> rollPoolOnce(RollContext context, int maxWeight, ArrayList<TableEntry> passedEntries){
-        int selection = maxWeight > 0 ? new Random().nextInt(maxWeight) : 0;
+    protected List<Item> rollPoolOnce(RollContext context, int maxWeight, List<TableEntry> passedEntries){
+        int selection = maxWeight > 0 ? ThreadLocalRandom.current().nextInt(maxWeight) : 0;
         int cumulativeWeightChecked = 1;
         for(TableEntry entry: passedEntries){
             //TODO: Get luck from context.
@@ -73,10 +72,10 @@ public final class TablePool {
             }
             cumulativeWeightChecked += entry.getModifiedWeight();
         }
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
-    public Item[] rollPool(RollContext context){
+    public Collection<Item> rollPool(RollContext context){
         if(Utility.compileConditions(conditions, context)) {
             ArrayList<TableEntry> passedEntries = getPassedEntries(context);
             int maxWeight = 0;
@@ -84,19 +83,19 @@ public final class TablePool {
 
             if(passedEntries.size() > 0) {
                 int rollAmount = getRandomRolls(0); //TODO: Get luck from context.
-                ArrayList<Item> fullitems = new ArrayList<>();
+                List<Item> fullitems = new ArrayList<>();
 
                 for (int i = 0; i < rollAmount; i++) {
-                    ArrayList<Item> items = rollPoolOnce(context, maxWeight, passedEntries);
+                    List<Item> items = rollPoolOnce(context, maxWeight, passedEntries);
                     for(Item item: items){
                         Item finalItem = Utility.applyFunctions(functions, item, context);
                         fullitems.add(finalItem);
                     }
                 }
-                return fullitems.toArray(new Item[0]);
+                return fullitems;
             }
         }
-        return new Item[0];
+        return Collections.emptyList();
     }
 
     protected ArrayList<TableEntry> getPassedEntries(RollContext context){
@@ -119,15 +118,14 @@ public final class TablePool {
         if(variableBonusRolls == null){
             return fixedBonusRolls * luck;
         } else {
-            Random random = new Random();
             float difference = variableBonusRolls.getMax() - variableBonusRolls.getMin();
-            float minoffset = difference * random.nextFloat();
+            float minoffset = difference * ThreadLocalRandom.current().nextFloat();
             return variableRolls.getMin()+minoffset;
         }
     }
 
     public int getRandomRolls(float luck){
-        return  Math.max(MathHelper.floor_float_int(getRandomBaseRolls() - getRandomBonusRolls(luck)), 0);
+        return Math.max(MathHelper.floor_float_int(getRandomBaseRolls() - getRandomBonusRolls(luck)), 0);
     }
 
     public TableCondition[] getConditions() { return conditions; }

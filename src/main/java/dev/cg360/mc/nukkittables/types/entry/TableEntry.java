@@ -12,6 +12,8 @@ import dev.cg360.mc.nukkittables.types.TableFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class TableEntry {
 
@@ -35,19 +37,19 @@ public abstract class TableEntry {
         this.quality = quality;
     }
 
-    public final ArrayList<Item> rollEntry(RollContext context){
+    public final List<Item> rollEntry(RollContext context){
         if(Utility.compileConditions(conditions, context)){
-            ArrayList<Item> items = gatherEntryItems(context);
-            ArrayList<Item> newItems = new ArrayList<>();
-            for(Item item: items){
+            List<Item> items = gatherEntryItems(context);
+            List<Item> newItems = new ArrayList<>();
+            for(Item item: items) {
                 newItems.add(Utility.applyFunctions(functions, item, context));
             }
             return newItems;
         }
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
-    public abstract ArrayList<Item> gatherEntryItems(RollContext context);
+    public abstract List<Item> gatherEntryItems(RollContext context);
 
     public final boolean loadPropertiesFromJson(JsonObject entryObject){
         JsonElement elementType = entryObject.get("type");

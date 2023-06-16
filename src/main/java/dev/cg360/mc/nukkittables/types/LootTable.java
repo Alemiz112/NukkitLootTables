@@ -8,9 +8,7 @@ import dev.cg360.mc.nukkittables.math.FloatRange;
 import dev.cg360.mc.nukkittables.math.IntegerRange;
 import dev.cg360.mc.nukkittables.types.entry.TableEntry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 public class LootTable {
 
@@ -22,14 +20,14 @@ public class LootTable {
         this.pools = pools;
     }
 
-    public Item[] rollLootTable(RollContext context){
-        ArrayList<Item> items = new ArrayList<>();
+    public Collection<Item> rollLootTable(RollContext context){
+        List<Item> items = new ArrayList<>();
         for(TablePool pool: pools){
             if(Utility.compileConditions(pool.getConditions(), context)){
-                items.addAll(Arrays.asList(pool.rollPool(context)));
+                items.addAll(pool.rollPool(context));
             }
         }
-        return items.toArray(new Item[0]);
+        return items;
     }
 
     public static Optional<LootTable> createLootTableFromString(JsonElement rootElement) {

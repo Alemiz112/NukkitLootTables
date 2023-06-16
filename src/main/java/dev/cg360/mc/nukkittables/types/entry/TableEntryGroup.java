@@ -11,6 +11,7 @@ import dev.cg360.mc.nukkittables.types.TableFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TableEntryGroup extends TableEntry implements ParentTableEntry {
 
@@ -23,7 +24,7 @@ public class TableEntryGroup extends TableEntry implements ParentTableEntry {
     }
 
     @Override
-    public ArrayList<Item> gatherEntryItems(RollContext context) {
+    public List<Item> gatherEntryItems(RollContext context) {
         ArrayList<Item> collectedItems = new ArrayList<>();
         for(TableEntry entry: children) collectedItems.addAll(entry.rollEntry(context));
         return collectedItems;

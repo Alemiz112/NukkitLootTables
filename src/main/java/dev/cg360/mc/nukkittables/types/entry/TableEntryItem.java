@@ -11,9 +11,7 @@ import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 import dev.cg360.mc.nukkittables.types.TableFunction;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 public class TableEntryItem extends TableEntry implements NamedTableEntry {
 
@@ -26,11 +24,13 @@ public class TableEntryItem extends TableEntry implements NamedTableEntry {
     }
 
     @Override
-    public ArrayList<Item> gatherEntryItems(RollContext context) {
-        if(name == null) return new ArrayList<>();
-        ArrayList<Item> item = new ArrayList<>();
-        getItem().ifPresent(item::add);
-        return item;
+    public List<Item> gatherEntryItems(RollContext context) {
+        if(name == null) {
+            return Collections.emptyList();
+        }
+        Optional<Item> item = this.getItem();
+        return item.map(Collections::singletonList)
+                .orElse(Collections.emptyList());
     }
 
     private Optional<Item> getItem(){

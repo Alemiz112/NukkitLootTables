@@ -6,8 +6,9 @@ import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.types.TableCondition;
 import dev.cg360.mc.nukkittables.types.TableFunction;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public final class TableEntryEmpty extends TableEntry {
 
@@ -17,8 +18,8 @@ public final class TableEntryEmpty extends TableEntry {
     }
 
     @Override
-    public ArrayList<Item> gatherEntryItems(RollContext context) {
-        return new ArrayList<>();
+    public List<Item> gatherEntryItems(RollContext context) {
+        return Collections.emptyList();
     }
 
     @Override

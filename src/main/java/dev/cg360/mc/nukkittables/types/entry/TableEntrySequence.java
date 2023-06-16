@@ -11,6 +11,7 @@ import dev.cg360.mc.nukkittables.types.TableFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TableEntrySequence extends TableEntry implements ParentTableEntry {
 
@@ -23,7 +24,7 @@ public class TableEntrySequence extends TableEntry implements ParentTableEntry {
     }
 
     @Override
-    public ArrayList<Item> gatherEntryItems(RollContext context) {
+    public List<Item> gatherEntryItems(RollContext context) {
         ArrayList<Item> collectedItems = new ArrayList<>();
         for(TableEntry entry: children){
             // Overriding the default roll handling
@@ -31,7 +32,7 @@ public class TableEntrySequence extends TableEntry implements ParentTableEntry {
             // But they're nice there ig.
 
             if(Utility.compileConditions(entry.conditions, context)){
-                ArrayList<Item> items = entry.gatherEntryItems(context);
+                List<Item> items = entry.gatherEntryItems(context);
                 for(Item item: items){
                     collectedItems.add(Utility.applyFunctions(functions, item, context));
                 }
