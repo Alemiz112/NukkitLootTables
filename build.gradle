@@ -6,7 +6,13 @@ plugins {
 }
 
 group "dev.cg360.mc"
-version "1.0-SNAPSHOT-AM"
+version "1.0-AM-SNAPSHOT"
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
 
 repositories {
     mavenLocal()
@@ -30,11 +36,6 @@ dependencies {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
     repositories {
         maven {
             url = "https://repo.mznt.eu/snapshots"
@@ -43,5 +44,17 @@ publishing {
                 password = System.getenv("DEPLOY_PASSWORD")
             }
         }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+tasks {
+    compileJava {
+        options.encoding = 'UTF-8'
     }
 }
