@@ -1,6 +1,8 @@
 package dev.cg360.mc.nukkittables;
 
 import cn.nukkit.Server;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import dev.cg360.mc.nukkittables.conditions.*;
 import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
 import dev.cg360.mc.nukkittables.functions.FunctionExecutorSetCount;
@@ -9,13 +11,13 @@ import dev.cg360.mc.nukkittables.types.LootTable;
 import dev.cg360.mc.nukkittables.executors.TableConditionExecutor;
 import dev.cg360.mc.nukkittables.types.entry.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Optional;
 
 public class LootTableRegistry {
@@ -93,22 +95,29 @@ public class LootTableRegistry {
         }
     }
 
-    public boolean registerStoredLootTable(String name) throws FileNotFoundException {
-        File file = new File(Server.getInstance().getDataPath() + "loottables/" + name);
-        if((file.exists() && file.isFile()) && file.getName().toLowerCase().endsWith(".json")){
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String finalStr = "";
-            Iterator<String> i = reader.lines().iterator();
-            while (i.hasNext()){
-                finalStr = finalStr.concat(i.next());
-            }
-            return registerLootTableFromString(name.toLowerCase().substring(0, name.length() - 5), finalStr);
+    public boolean registerStoredLootTable(String name) throws IOException {
+        Path path = Paths.get(Server.getInstance().getDataPath(), "loottables/", name);
+        String lootName = name.toLowerCase().substring(0, name.length() - 5);
+        return this.registerStoredLootTable(path, lootName);
+    }
+
+    public boolean registerStoredLootTable(Path path, String name) throws IOException {
+        if (!Files.isRegularFile(path)) {
+            throw new IllegalStateException("File does not exist: " + path);
         }
-        return false;
+
+        try (InputStream stream = Files.newInputStream(path);
+             InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+            return this.registerLootTableFromString(name, JsonParser.parseReader(reader));
+        }
     }
 
     public boolean registerLootTableFromString(String name, String jsonData) {
-        Optional<LootTable> pt = LootTable.createLootTableFromString(jsonData);
+        return this.registerLootTableFromString(name, JsonParser.parseString(jsonData));
+    }
+
+    public boolean registerLootTableFromString(String name, JsonElement json) {
+        Optional<LootTable> pt = LootTable.createLootTableFromString(json);
         if(pt.isPresent()){
             lootTables.put(name.toLowerCase().trim().substring((name.startsWith("/") ? 1 : 0)), pt.get());
             return true;

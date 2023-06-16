@@ -32,9 +32,7 @@ public class LootTable {
         return items.toArray(new Item[0]);
     }
 
-    public static Optional<LootTable> createLootTableFromString(String jsonData) {
-        JsonElement rootElement = new JsonParser().parse(jsonData);
-
+    public static Optional<LootTable> createLootTableFromString(JsonElement rootElement) {
         if(rootElement instanceof JsonObject){
             JsonObject rootObject = (JsonObject) rootElement;
             JsonElement tableTypeElement = rootObject.get("type");
