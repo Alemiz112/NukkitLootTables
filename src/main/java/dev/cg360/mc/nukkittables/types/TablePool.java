@@ -66,8 +66,7 @@ public class TablePool {
         int selection = maxWeight > 0 ? ThreadLocalRandom.current().nextInt(maxWeight) : 0;
         int cumulativeWeightChecked = 1;
         for(TableEntry entry: passedEntries){
-            //TODO: Get luck from context.
-            if(selection <= (cumulativeWeightChecked + entry.getModifiedWeight())){
+            if(selection <= (cumulativeWeightChecked + entry.getModifiedWeight(context.getLuck()))){
                 return entry.rollEntry(context);
             }
             cumulativeWeightChecked += entry.getModifiedWeight();
@@ -79,10 +78,10 @@ public class TablePool {
         if(Utility.compileConditions(conditions, context)) {
             ArrayList<TableEntry> passedEntries = getPassedEntries(context);
             int maxWeight = 0;
-            for(TableEntry entry : passedEntries) maxWeight += entry.getModifiedWeight(); //TODO: Get luck from context.
+            for(TableEntry entry : passedEntries) maxWeight += entry.getModifiedWeight(context.getLuck());
 
             if(passedEntries.size() > 0) {
-                int rollAmount = getRandomRolls(0); //TODO: Get luck from context.
+                int rollAmount = getRandomRolls(context.getLuck());
                 List<Item> fullitems = new ArrayList<>();
 
                 for (int i = 0; i < rollAmount; i++) {

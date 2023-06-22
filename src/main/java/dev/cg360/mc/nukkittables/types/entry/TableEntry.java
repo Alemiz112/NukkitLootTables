@@ -17,7 +17,7 @@ import java.util.List;
 
 public abstract class TableEntry {
 
-    public final float DEFAULT_LUCK = 0;
+    public static final float DEFAULT_LUCK = 0;
 
     protected String type;
 
@@ -116,6 +116,7 @@ public abstract class TableEntry {
     public int getQuality() { return quality; }
 
     public int getModifiedWeight(){ return getModifiedWeight(DEFAULT_LUCK); }
+
     public int getModifiedWeight(float luck){
         return Math.max((int) Math.floor(weight + (quality * luck)), 0);
     }
@@ -126,7 +127,6 @@ public abstract class TableEntry {
     @Override
     public String toString() {
         return "TableEntry{" +
-                "DEFAULT_LUCK=" + DEFAULT_LUCK +
                 ", type='" + type + '\'' +
                 ", conditions=" + Arrays.toString(conditions) +
                 ", functions=" + Arrays.toString(functions) +
