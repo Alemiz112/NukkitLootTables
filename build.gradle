@@ -25,6 +25,10 @@ repositories {
         }
     }
     maven {
+        name = "MizNet Snapshots"
+        url = "https://repo.mznt.eu/snapshots"
+    }
+    maven {
         name = "Cloudburst Repo"
         url = "https://repo.opencollab.dev/main"
     }
