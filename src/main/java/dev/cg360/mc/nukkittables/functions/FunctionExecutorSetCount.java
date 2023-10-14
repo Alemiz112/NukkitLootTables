@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.cg360.mc.nukkittables.Utility;
+import dev.cg360.mc.nukkittables.context.RollContext;
 import dev.cg360.mc.nukkittables.math.IntegerRange;
 import dev.cg360.mc.nukkittables.executors.TableFunctionExecutor;
 
@@ -15,7 +16,7 @@ import java.util.Random;
 public class FunctionExecutorSetCount extends TableFunctionExecutor {
 
     @Override
-    protected Item applyFunctionToItem(Item item, JsonObject data) {
+    protected Item applyFunctionToItem(Item item, JsonObject data, RollContext context) {
         getCount(data).ifPresent(count -> item.setCount(MathHelper.clamp(count,0, 64)));
         return item;
     }

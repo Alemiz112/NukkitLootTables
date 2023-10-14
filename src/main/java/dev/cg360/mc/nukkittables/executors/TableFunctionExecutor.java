@@ -9,10 +9,10 @@ import dev.cg360.mc.nukkittables.types.TableCondition;
 public abstract class TableFunctionExecutor {
 
     public final Item applyFunction(Item item, RollContext context, TableCondition[] conditions, JsonObject data){ //TODO: And conditions
-        return Utility.compileConditions(conditions, context) ? applyFunctionToItem(item, data) : item;
+        return Utility.compileConditions(conditions, context) ? applyFunctionToItem(item, data, context) : item;
     }
 
-    protected abstract Item applyFunctionToItem(Item item, JsonObject data);
+    protected abstract Item applyFunctionToItem(Item item, JsonObject data, RollContext context);
 
     public abstract String getFunctionType();
 }
